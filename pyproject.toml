@@ -5,7 +5,8 @@ description = "Unified Polymarket v2 APIs with Pydantic data validation - Clob, 
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
-    { name = "Razvan Gheorghe", email = "razvan@gheorghe.me" }
+    { name = "Razvan Gheorghe", email = "razvan@gheorghe.me" },
+    { name = "Till Smejkal", email = "till.smejkal@ossmail.de" }
 ]
 
 # PEP 631-compliant dependencies table
@@ -176,4 +177,4 @@ lint.ignore = [
 
 
 [project.urls]
-repository = "https://github.com/qualiaenjoyer/polymarket-apis"
+repository = "https://github.com/l3nkz/polymarket-apis"
