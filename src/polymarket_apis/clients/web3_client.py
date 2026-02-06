@@ -3,6 +3,8 @@ from json import dumps, load
 from pathlib import Path
 from typing import Literal, Optional, cast
 
+import logging
+
 import httpx
 from eth_account.messages import encode_defunct
 from eth_typing import ABI, AnyAddress, ChecksumAddress, HexStr
@@ -34,6 +36,7 @@ from ..utilities.web3.helpers import (
     split_signature,
 )
 
+logger = logging.getLogger("web3client")
 
 def _load_abi(contract_name: str) -> ABI:
     abi_path = (
@@ -580,17 +583,17 @@ class PolymarketWeb3Client(BaseWeb3Client):
         tx_hash = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         tx_hash_hex = tx_hash.hex()
 
-        print(f"Txn hash: 0x{tx_hash_hex}")
+        logger.info(f"Txn hash: 0x{tx_hash_hex}")
 
         receipt_dict = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         receipt = TransactionReceipt.model_validate(receipt_dict)
 
-        print(
+        logger.info(
             f"{operation_name} succeeded"
             if receipt.status == 1
             else f"{operation_name} failed"
         )
-        print(
+        logger.info(
             f"Paid {round((receipt.gas_used * receipt.effective_gas_price) / 10**18, 3)} POL for gas"
         )
 
@@ -751,11 +754,11 @@ class PolymarketGaslessWeb3Client(BaseWeb3Client):
 
         gasless_response = response.json()
 
-        print(
+        logger.info(
             f"Gasless txn submitted: {gasless_response.get('transactionHash', 'N/A')}"
         )
-        print(f"Transaction ID: {gasless_response.get('transactionID', 'N/A')}")
-        print(f"State: {gasless_response.get('state', 'N/A')}")
+        logger.info(f"Transaction ID: {gasless_response.get('transactionID', 'N/A')}")
+        logger.info(f"State: {gasless_response.get('state', 'N/A')}")
 
         # Wait for confirmation and return receipt
         tx_hash = gasless_response.get("transactionHash")
@@ -763,7 +766,7 @@ class PolymarketGaslessWeb3Client(BaseWeb3Client):
             receipt_dict = self.w3.eth.wait_for_transaction_receipt(tx_hash)
             receipt = TransactionReceipt.model_validate(receipt_dict)
 
-            print(
+            logger.info(
                 f"{operation_name} succeeded"
                 if receipt.status == 1
                 else f"{operation_name} failed"
@@ -810,7 +813,7 @@ class PolymarketGaslessWeb3Client(BaseWeb3Client):
             estimated_gas = self.w3.eth.estimate_gas(estimation_txn)
             gas_limit = str(int(estimated_gas * 1.3 + 100000))
         except TimeExhausted as e:
-            print(
+            logger.warn(
                 f"Timeout during gas estimation for proxy transaction, using default: {e}"
             )
             gas_limit = str(10_000_000)
