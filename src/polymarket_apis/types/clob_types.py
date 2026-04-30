@@ -297,7 +297,7 @@ class ClobMarketInfo(BaseModel):
     taker_base_fee: int = Field(alias="tbf")
     rfq_enabled: Optional[bool] = Field(None, alias="rfqe")
     taker_order_delay_enabled: Optional[bool] = Field(None, alias="itode")
-    blockaid_check_enabled: bool = Field(alias="ibce")
+    blockaid_check_enabled: Optional[bool] = Field(None, alias="ibce")
     fee_data: ClobFeeData = Field(alias="fd")
     minimum_order_age_seconds: Optional[int] = Field(None, alias="oas")
 
