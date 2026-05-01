@@ -714,11 +714,10 @@ class PolymarketClobClient(PolymarketReadOnlyClobClient):
             response.raise_for_status()
             return OrderPostResponse(**response.json())
         except httpx.HTTPStatusError as exc:
-            msg = f"Client Error '{exc.response.status_code} {exc.response.reason_phrase}' while posting order"
+            err_json = exc.response.json()
+            msg = f"Client Error '{exc.response.status_code} {exc.response.reason_phrase}' while posting order - {err_json["error"]}"
             logger.warning(msg)
-            error_json = exc.response.json()
-            print("Details:", error_json["error"])
-            return None
+            raise Exception(msg)
 
     def create_and_post_order(
         self,
