@@ -223,6 +223,7 @@ class GammaMarket(BaseModel):
     twitter_card_location: Optional[str] = Field(None, alias="twitterCardLocation")
     fee_schedule: Optional[FeeSchedule] = Field(None, alias="feeSchedule")
     maker_rebates_fee_share_bps: int | None = Field(None, alias="makerRebatesFeeShareBps")
+    combo_status: Optional[str] = Field(None, alias="comboStatus")
 
     @field_validator("condition_id", mode="wrap")
     @classmethod
@@ -291,6 +292,7 @@ class Series(BaseModel):
     tags: Optional[list[Tag]] = Field(None, alias="tags")
     comment_count: Optional[int] = Field(None, alias="commentCount")
     chats: Optional[list[Chat]] = Field(None, alias="chats")
+    schema: Optional[str] = Field(None, alias="$schema")
 
 
 class Category(BaseModel):
@@ -326,6 +328,7 @@ class Tag(BaseModel):
     force_hide: Optional[bool] = Field(None, alias="forceHide")
     is_carousel: Optional[bool] = Field(None, alias="isCarousel")
     requires_translation: Optional[bool] = Field(None, alias="requiresTranslation")
+    schema: Optional[str] = Field(None, alias="$schema")
 
 
 class TagRelation(BaseModel):
